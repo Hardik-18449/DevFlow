@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:6.0
+    container_name: devflow-mongodb
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+  redis:
+    image: redis:7.0-alpine
+    container_name: devflow-redis
+    restart: always
+    ports:
+      - "6379:6379"
+
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: devflow-server
+    restart: always
+    ports:
+      - "5000:5000"
+    environment:
+      - NODE_ENV=production
+      - PORT=5000
+      - MONGO_URI=mongodb://mongodb:27017/devflow
+      - REDIS_URL=redis://redis:6379
+      - JWT_ACCESS_SECRET=devflow_prod_access_secret_2026
+      - JWT_REFRESH_SECRET=devflow_prod_refresh_secret_2026
+      - CLIENT_URL=http://localhost:5173
+    depends_on:
+      - mongodb
+      - redis
+
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: devflow-client
+    restart: always
+    ports:
+      - "5173:80"
+    depends_on:
+      - server
+
+volumes:
+  mongo-data:
