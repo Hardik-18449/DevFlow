@@ -21,6 +21,7 @@ import {
 } from 'lucide-react';
 import { useLoginMutation } from '../services/api';
 import { setCredentials } from '../features/auth/authSlice';
+import { ProductChatbot } from '../components/landing/ProductChatbot';
 
 export const Landing = () => {
   const { accessToken } = useSelector((state) => state.auth);
@@ -411,6 +412,9 @@ export const Landing = () => {
           </div>
         </div>
       </footer>
+
+      {/* Floating Interactive Product Assistant Chatbot */}
+      <ProductChatbot />
     </div>
   );
 };
