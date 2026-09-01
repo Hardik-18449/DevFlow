@@ -376,11 +376,32 @@ export const Landing = () => {
             <span className="text-sm font-bold text-textPrimary">DevFlow SaaS Platform</span>
           </div>
 
-          <p className="text-xs text-textSecondary">
-            © {new Date().getFullYear()} DevFlow. All rights reserved. Enterprise Multi-Tenant Collaboration.
-          </p>
+          <div className="flex flex-col items-center md:items-start gap-1">
+            <p className="text-xs text-textSecondary">
+              © {new Date().getFullYear()} DevFlow. All rights reserved. Enterprise Multi-Tenant Collaboration.
+            </p>
+            <p className="text-xs font-semibold text-accent flex items-center justify-center md:justify-start gap-1">
+              <span>Designed & Developed by</span>
+              <a
+                href="https://github.com/Hardik-18449"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline hover:text-accent-hover font-bold text-textPrimary"
+              >
+                Hardik Gurjar
+              </a>
+            </p>
+          </div>
 
           <div className="flex items-center gap-4 text-xs font-medium text-textSecondary">
+            <a
+              href="https://github.com/Hardik-18449/DevFlow"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-textPrimary transition-colors flex items-center gap-1 font-semibold text-accent"
+            >
+              GitHub Repository
+            </a>
             <Link to="/login" className="hover:text-textPrimary transition-colors">
               Sign In
             </Link>
