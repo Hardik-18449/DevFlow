@@ -122,6 +122,32 @@ const GREETING_KEYWORDS = [
   'yo',
 ];
 
+const THANKS_KEYWORDS = [
+  'thank you',
+  'thanks',
+  'thankyou',
+  'thx',
+  'tysm',
+  'thanks a lot',
+  'thank u',
+  'appreciate it',
+  'many thanks',
+];
+
+const ACK_KEYWORDS = [
+  'okay',
+  'ok',
+  'okayy',
+  'alright',
+  'cool',
+  'got it',
+  'sure',
+  'fine',
+  'perfect',
+  'awesome',
+  'great',
+];
+
 const CONFIDENTIAL_KEYWORDS = [
   'secret',
   'api_key',
@@ -157,7 +183,21 @@ You can ask me about:
     };
   }
 
-  // 2. Confidentiality Protection Guard
+  // 2. Thanks / Gratitude Handler
+  if (THANKS_KEYWORDS.some((kw) => query === kw || query.includes(kw))) {
+    return {
+      response: `You are welcome! Feel free to ask if you have any other questions about DevFlow.`,
+    };
+  }
+
+  // 3. Okay / Acknowledgment Handler
+  if (ACK_KEYWORDS.some((kw) => query === kw || query === kw + '!' || query.startsWith(kw + ' '))) {
+    return {
+      response: `Glad to help! Let me know if you need anything else.`,
+    };
+  }
+
+  // 4. Confidentiality Protection Guard
   if (CONFIDENTIAL_KEYWORDS.some((kw) => query.includes(kw))) {
     return {
       response: `Security Notice: Sorry, I cannot share any confidential information, database keys, environment secrets, or private system credentials.`,
