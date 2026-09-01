@@ -398,11 +398,27 @@ export const Landing = () => {
               © {new Date().getFullYear()} DevFlow. All rights reserved. Enterprise Multi-Tenant Collaboration.
             </p>
             <p className="text-xs font-semibold text-accent">
-              Designed & Developed by VoidLayers
+              Designed & Developed by{' '}
+              <a
+                href="https://voidlayers.vercel.app/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline hover:opacity-80 transition-opacity"
+              >
+                VoidLayers
+              </a>
             </p>
           </div>
 
           <div className="flex items-center gap-4 text-xs font-medium text-textSecondary">
+            <a
+              href="https://voidlayers.vercel.app/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-textPrimary transition-colors font-semibold text-accent"
+            >
+              VoidLayers
+            </a>
             <a
               href="#features"
               className="hover:text-textPrimary transition-colors flex items-center gap-1 font-semibold text-accent"
