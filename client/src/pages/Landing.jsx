@@ -29,6 +29,7 @@ export const Landing = () => {
   const navigate = useNavigate();
   const [login] = useLoginMutation();
 
+  const [showBanner, setShowBanner] = useState(true);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [theme, setTheme] = useState(() => {
     return localStorage.getItem('devflow_theme') || 'dark';
@@ -66,14 +67,23 @@ export const Landing = () => {
   return (
     <div className="min-h-screen bg-bgPrimary text-textPrimary flex flex-col transition-colors selection:bg-accent/30 selection:text-white">
       {/* Development Phase Announcement Banner */}
-      <div className="bg-amber-500/10 border-b border-amber-500/20 text-amber-600 dark:text-amber-400 px-4 py-2 text-center text-xs font-semibold flex items-center justify-center gap-2">
-        <Sparkles size={14} className="shrink-0" />
-        <span>Notice: DevFlow is currently in active development phase. The final release version will be announced soon.</span>
-      </div>
+      {showBanner && (
+        <div className="relative bg-amber-500/10 border-b border-amber-500/20 text-amber-600 dark:text-amber-400 px-4 py-2 text-center text-xs font-semibold flex items-center justify-center gap-2 pr-10">
+          <span>DevFlow is currently in active development phase. The final release version will be announced soon.</span>
+          <button
+            onClick={() => setShowBanner(false)}
+            className="absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded-lg hover:bg-amber-500/20 text-amber-600 dark:text-amber-400 transition-colors cursor-pointer"
+            aria-label="Close notice banner"
+            title="Dismiss notice"
+          >
+            <X size={14} />
+          </button>
+        </div>
+      )}
 
       {/* Navigation Bar */}
       <header className="sticky top-0 z-50 bg-bgPrimary/90 backdrop-blur-md border-b border-borderColor">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-xl bg-accent flex items-center justify-center text-white shadow-subtle">
               <Zap size={20} className="fill-white" />
@@ -200,13 +210,13 @@ export const Landing = () => {
 
       {/* Hero Section */}
       <section className="relative pt-12 pb-14 sm:pt-20 sm:pb-16 md:pt-28 md:pb-24 overflow-hidden">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 text-center">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-accent/10 border border-accent/20 text-accent text-[11px] sm:text-xs font-semibold mb-6">
             <Sparkles size={14} />
             <span>Enterprise Multi-Tenant Developer Workspace</span>
           </div>
 
-          <h1 className="text-3xl sm:text-5xl md:text-6xl font-extrabold text-textPrimary tracking-tight leading-tight">
+          <h1 className="text-3xl sm:text-5xl md:text-6xl font-extrabold text-textPrimary tracking-tight leading-tight max-w-4xl mx-auto">
             Project Management Built for High-Performance Dev Teams
           </h1>
 
@@ -235,7 +245,7 @@ export const Landing = () => {
 
       {/* 1-Click Interactive Demo Section */}
       <section id="demo" className="py-12 sm:py-16 bg-bgSecondary/50 border-y border-borderColor">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-8 sm:mb-10">
             <h2 className="text-xl sm:text-2xl font-bold text-textPrimary tracking-tight">Instant 1-Click Product Demo</h2>
             <p className="text-xs text-textSecondary mt-1">Select a role below to explore DevFlow with real-time pre-seeded workspace data</p>
@@ -303,7 +313,7 @@ export const Landing = () => {
 
       {/* Key Features Grid */}
       <section id="features" className="py-14 sm:py-20">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto mb-12 sm:mb-16">
             <h2 className="text-2xl sm:text-3xl font-bold text-textPrimary tracking-tight">Engineered for Modern Engineering Teams</h2>
             <p className="text-xs text-textSecondary mt-2">Everything your dev team needs to plan, track, and ship high-quality software</p>
@@ -375,12 +385,12 @@ export const Landing = () => {
 
       {/* Footer */}
       <footer className="mt-auto border-t border-borderColor bg-cardBg py-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left">
           <div className="flex items-center gap-2.5">
             <div className="w-7 h-7 rounded-lg bg-accent flex items-center justify-center text-white">
               <Zap size={16} className="fill-white" />
             </div>
-            <span className="text-sm font-bold text-textPrimary">DevFlow SaaS Platform</span>
+            <span className="text-sm font-bold text-textPrimary">DevFlow</span>
           </div>
 
           <div className="flex flex-col items-center justify-center gap-1">
@@ -388,7 +398,7 @@ export const Landing = () => {
               © {new Date().getFullYear()} DevFlow. All rights reserved. Enterprise Multi-Tenant Collaboration.
             </p>
             <p className="text-xs font-semibold text-accent">
-              Designed & Developed by DevFlow SaaS Platform
+              Designed & Developed by VoidLayers
             </p>
           </div>
 
