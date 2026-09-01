@@ -170,7 +170,7 @@ export const Settings = () => {
 
       {/* Invitation Modal */}
       <Modal isOpen={isInviteModalOpen} onClose={() => setIsInviteModalOpen(false)} title="Invite Team Member">
-        <form onSubmit={handleInvite} className="space-y-4">
+        <form onSubmit={handleInvite} noValidate className="space-y-4">
           {errorMsg && (
             <div className="p-3 rounded-xl bg-danger/10 border border-danger/30 text-xs text-danger flex items-center gap-2">
               <AlertCircle size={16} />
@@ -183,12 +183,13 @@ export const Settings = () => {
               Email Address *
             </label>
             <input
-              type="email"
-              required
+              type="text"
               placeholder="developer@company.com"
               value={inviteEmail}
               onChange={(e) => setInviteEmail(e.target.value)}
-              className="w-full px-3 py-2 bg-bgSecondary border border-borderColor rounded-xl text-sm text-textPrimary focus:outline-none focus:border-accent transition-colors"
+              className={`w-full px-3 py-2 bg-bgSecondary border ${
+                errorMsg && !inviteEmail.trim() ? 'border-danger' : 'border-borderColor'
+              } rounded-xl text-sm text-textPrimary focus:outline-none focus:border-accent transition-colors`}
             />
           </div>
 

@@ -60,7 +60,7 @@ export const TaskFormModal = ({ isOpen, onClose, projectId, defaultStatus = 'TOD
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Create New Task">
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} noValidate className="space-y-4">
         {errorMsg && (
           <div className="p-3 rounded-xl bg-danger/10 border border-danger/30 text-xs text-danger flex items-center gap-2 font-medium">
             <AlertCircle size={16} className="shrink-0" />
@@ -73,11 +73,12 @@ export const TaskFormModal = ({ isOpen, onClose, projectId, defaultStatus = 'TOD
           </label>
           <input
             type="text"
-            required
             placeholder="e.g., Implement OAuth2 authentication flow"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="w-full px-3 py-2 bg-bgSecondary border border-borderColor rounded-xl text-sm text-textPrimary focus:outline-none focus:border-accent transition-colors"
+            className={`w-full px-3 py-2 bg-bgSecondary border ${
+              errorMsg && !title.trim() ? 'border-danger' : 'border-borderColor'
+            } rounded-xl text-sm text-textPrimary focus:outline-none focus:border-accent transition-colors`}
           />
         </div>
 

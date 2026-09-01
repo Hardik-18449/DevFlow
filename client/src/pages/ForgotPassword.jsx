@@ -106,19 +106,20 @@ export const ForgotPassword = () => {
             </Link>
           </div>
         ) : (
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} noValidate className="space-y-4">
             <div>
               <label className="text-xs font-semibold text-textSecondary uppercase tracking-wider block mb-1">
                 Email Address
               </label>
               <input
-                type="email"
-                required
+                type="text"
                 disabled={isLoading}
                 placeholder="owner@devflow.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-2.5 bg-bgSecondary border border-borderColor rounded-xl text-sm text-textPrimary focus:outline-none focus:border-accent transition-colors disabled:opacity-50"
+                className={`w-full px-4 py-2.5 bg-bgSecondary border ${
+                  errorMsg ? 'border-danger' : 'border-borderColor'
+                } rounded-xl text-sm text-textPrimary focus:outline-none focus:border-accent transition-colors disabled:opacity-50`}
               />
             </div>
 

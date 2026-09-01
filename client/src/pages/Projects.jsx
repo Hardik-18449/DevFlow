@@ -161,7 +161,7 @@ export const Projects = () => {
 
       {/* Create Project Modal */}
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="Create Software Project">
-        <form onSubmit={handleCreate} className="space-y-4">
+        <form onSubmit={handleCreate} noValidate className="space-y-4">
           {createError && (
             <div className="p-3 rounded-lg bg-danger/10 border border-danger/30 text-xs text-danger flex items-center gap-2">
               <AlertCircle size={15} />
@@ -175,14 +175,15 @@ export const Projects = () => {
             </label>
             <input
               type="text"
-              required
               placeholder="e.g., Core Engine API"
               value={name}
               onChange={(e) => {
                 setName(e.target.value);
                 if (!key) setKey(e.target.value.substring(0, 4).toUpperCase().replace(/[^A-Z]/g, ''));
               }}
-              className="w-full px-3 py-2 bg-bgSecondary border border-borderColor rounded-lg text-xs text-textPrimary focus:outline-none focus:border-accent transition-colors"
+              className={`w-full px-3 py-2 bg-bgSecondary border ${
+                createError && !name.trim() ? 'border-danger' : 'border-borderColor'
+              } rounded-lg text-xs text-textPrimary focus:outline-none focus:border-accent transition-colors`}
             />
           </div>
 
@@ -192,12 +193,13 @@ export const Projects = () => {
             </label>
             <input
               type="text"
-              required
               maxLength={6}
               placeholder="ENG"
               value={key}
               onChange={(e) => setKey(e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, ''))}
-              className="w-full px-3 py-2 bg-bgSecondary border border-borderColor rounded-lg text-xs text-textPrimary font-mono uppercase focus:outline-none focus:border-accent transition-colors"
+              className={`w-full px-3 py-2 bg-bgSecondary border ${
+                createError && !key.trim() ? 'border-danger' : 'border-borderColor'
+              } rounded-lg text-xs text-textPrimary font-mono uppercase focus:outline-none focus:border-accent transition-colors`}
             />
           </div>
 

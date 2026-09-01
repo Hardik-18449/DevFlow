@@ -81,18 +81,19 @@ export const Register = () => {
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} noValidate className="space-y-4">
           <div>
             <label className="text-xs font-semibold text-textSecondary uppercase tracking-wider block mb-1">
               Full Name
             </label>
             <input
               type="text"
-              required
               placeholder="Hardik"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full px-4 py-2.5 bg-bgSecondary border border-borderColor rounded-xl text-sm text-textPrimary focus:outline-none focus:border-accent transition-colors"
+              className={`w-full px-4 py-2.5 bg-bgSecondary border ${
+                errorMsg && !name.trim() ? 'border-danger' : 'border-borderColor'
+              } rounded-xl text-sm text-textPrimary focus:outline-none focus:border-accent transition-colors`}
             />
           </div>
 
@@ -101,12 +102,13 @@ export const Register = () => {
               Email Address
             </label>
             <input
-              type="email"
-              required
+              type="text"
               placeholder="hardik@example.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-2.5 bg-bgSecondary border border-borderColor rounded-xl text-sm text-textPrimary focus:outline-none focus:border-accent transition-colors"
+              className={`w-full px-4 py-2.5 bg-bgSecondary border ${
+                errorMsg && !email.trim() ? 'border-danger' : 'border-borderColor'
+              } rounded-xl text-sm text-textPrimary focus:outline-none focus:border-accent transition-colors`}
             />
           </div>
 
@@ -117,11 +119,12 @@ export const Register = () => {
             <div className="relative">
               <input
                 type={showPassword ? 'text' : 'password'}
-                required
                 placeholder="••••••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full pl-4 pr-10 py-2.5 bg-bgSecondary border border-borderColor rounded-xl text-sm text-textPrimary focus:outline-none focus:border-accent transition-colors"
+                className={`w-full pl-4 pr-10 py-2.5 bg-bgSecondary border ${
+                  errorMsg && password.length < 6 ? 'border-danger' : 'border-borderColor'
+                } rounded-xl text-sm text-textPrimary focus:outline-none focus:border-accent transition-colors`}
               />
               <button
                 type="button"

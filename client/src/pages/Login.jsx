@@ -110,18 +110,19 @@ export const Login = () => {
           </div>
         )}
 
-        <form onSubmit={handleLogin} className="space-y-4">
+        <form onSubmit={handleLogin} noValidate className="space-y-4">
           <div>
             <label className="text-xs font-semibold text-textSecondary uppercase tracking-wider block mb-1">
               Email Address
             </label>
             <input
-              type="email"
-              required
+              type="text"
               placeholder="owner@devflow.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-2.5 bg-bgSecondary border border-borderColor rounded-xl text-sm text-textPrimary focus:outline-none focus:border-accent transition-colors"
+              className={`w-full px-4 py-2.5 bg-bgSecondary border ${
+                errorMsg && !email.trim() ? 'border-danger' : 'border-borderColor'
+              } rounded-xl text-sm text-textPrimary focus:outline-none focus:border-accent transition-colors`}
             />
           </div>
 
@@ -137,11 +138,12 @@ export const Login = () => {
             <div className="relative">
               <input
                 type={showPassword ? 'text' : 'password'}
-                required
                 placeholder="••••••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full pl-4 pr-10 py-2.5 bg-bgSecondary border border-borderColor rounded-xl text-sm text-textPrimary focus:outline-none focus:border-accent transition-colors"
+                className={`w-full pl-4 pr-10 py-2.5 bg-bgSecondary border ${
+                  errorMsg && !password ? 'border-danger' : 'border-borderColor'
+                } rounded-xl text-sm text-textPrimary focus:outline-none focus:border-accent transition-colors`}
               />
               <button
                 type="button"
