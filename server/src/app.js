@@ -21,6 +21,7 @@ const notificationRoutes = require('./modules/notifications/notification.routes'
 const activityRoutes = require('./modules/activities/activity.routes');
 const searchRoutes = require('./modules/search/search.routes');
 const uploadRoutes = require('./modules/uploads/upload.routes');
+const chatbotRoutes = require('./modules/chatbot/chatbot.routes');
 
 const app = express();
 
@@ -85,6 +86,7 @@ app.use('/api/v1/notifications', notificationRoutes);
 app.use('/api/v1', activityRoutes);
 app.use('/api/v1/search', searchRoutes);
 app.use('/api/v1/uploads', uploadRoutes);
+app.use('/api/v1/chatbot', chatbotRoutes);
 
 app.use((req, res) => {
   res.status(404).json({

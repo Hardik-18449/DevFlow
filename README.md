@@ -7,8 +7,7 @@ DevFlow is a full-stack project management and real-time developer collaboration
 ## 👨‍💻 Created & Developed By
 
 **Hardik Gurjar**
-- **GitHub**: [Hardik-18449](https://github.com/Hardik-18449)
-- **Project Repository**: [DevFlow Repository](https://github.com/Hardik-18449/DevFlow)
+- **Platform**: DevFlow Enterprise SaaS
 
 ---
 

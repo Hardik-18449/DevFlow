@@ -65,6 +65,12 @@ export const Landing = () => {
 
   return (
     <div className="min-h-screen bg-bgPrimary text-textPrimary flex flex-col transition-colors selection:bg-accent/30 selection:text-white">
+      {/* Development Phase Announcement Banner */}
+      <div className="bg-amber-500/10 border-b border-amber-500/20 text-amber-600 dark:text-amber-400 px-4 py-2 text-center text-xs font-semibold flex items-center justify-center gap-2">
+        <Sparkles size={14} className="shrink-0" />
+        <span>Notice: DevFlow is currently in active development phase. The final release version will be announced soon.</span>
+      </div>
+
       {/* Navigation Bar */}
       <header className="sticky top-0 z-50 bg-bgPrimary/90 backdrop-blur-md border-b border-borderColor">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
@@ -377,31 +383,21 @@ export const Landing = () => {
             <span className="text-sm font-bold text-textPrimary">DevFlow SaaS Platform</span>
           </div>
 
-          <div className="flex flex-col items-center md:items-start gap-1">
+          <div className="flex flex-col items-center justify-center gap-1">
             <p className="text-xs text-textSecondary">
               © {new Date().getFullYear()} DevFlow. All rights reserved. Enterprise Multi-Tenant Collaboration.
             </p>
-            <p className="text-xs font-semibold text-accent flex items-center justify-center md:justify-start gap-1">
-              <span>Designed & Developed by</span>
-              <a
-                href="https://github.com/Hardik-18449"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="underline hover:text-accent-hover font-bold text-textPrimary"
-              >
-                Hardik Gurjar
-              </a>
+            <p className="text-xs font-semibold text-accent">
+              Designed & Developed by DevFlow SaaS Platform
             </p>
           </div>
 
           <div className="flex items-center gap-4 text-xs font-medium text-textSecondary">
             <a
-              href="https://github.com/Hardik-18449/DevFlow"
-              target="_blank"
-              rel="noopener noreferrer"
+              href="#features"
               className="hover:text-textPrimary transition-colors flex items-center gap-1 font-semibold text-accent"
             >
-              GitHub Repository
+              DevFlow Platform
             </a>
             <Link to="/login" className="hover:text-textPrimary transition-colors">
               Sign In

@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Bot, X, Send, Sparkles, MessageSquare, ArrowRight, User, Shield, Kanban, Zap, Code } from 'lucide-react';
+import { Bot, X, Send, Sparkles, MessageSquare, ArrowRight, User, Shield, Kanban, Zap, Code, ThumbsUp, ThumbsDown } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const QUICK_QUESTIONS = [
@@ -80,13 +80,16 @@ Backend & Database:
 • Jest + Supertest Automated Tests`,
   },
   {
-    keywords: ['who', 'developed', 'author', 'creator', 'developer', 'hardik'],
+    keywords: ['who developed', 'who built', 'who created', 'author', 'creator', 'developer', 'hardik', 'who designed'],
     response: `DevFlow was designed and engineered by Hardik Gurjar.
 
-• GitHub Profile: github.com/Hardik-18449
-• Project Repository: github.com/Hardik-18449/DevFlow
-
 Built as an enterprise-grade demonstration of modern full-stack web application architecture, security hardening, and real-time collaboration.`,
+  },
+  {
+    keywords: ['who are you', 'what are you', 'who are u', 'your identity', 'what is your name', 'who created you'],
+    response: `I am the DevFlow AI Assistant, an interactive product guide built specifically for the DevFlow SaaS Platform.
+
+I can help answer your questions about DevFlow's features, architecture, RBAC roles, multi-tenant isolation, and technology stack.`,
   },
   {
     keywords: ['kanban', 'board', 'tasks', 'dnd', 'drag'],
@@ -106,70 +109,14 @@ Built as an enterprise-grade demonstration of modern full-stack web application 
   },
 ];
 
-const GREETING_KEYWORDS = [
-  'hi',
-  'hii',
-  'hiii',
-  'hello',
-  'hey',
-  'heyy',
-  'greetings',
-  'hola',
-  'good morning',
-  'good afternoon',
-  'good evening',
-  'sup',
-  'yo',
-];
+const GREETING_KEYWORDS = ['hi', 'hii', 'hiii', 'hello', 'hey', 'heyy', 'greetings', 'hola', 'good morning', 'good afternoon', 'good evening', 'sup', 'yo'];
+const THANKS_KEYWORDS = ['thank you', 'thanks', 'thankyou', 'thx', 'tysm', 'thanks a lot', 'thank u', 'appreciate it', 'many thanks'];
+const ACK_KEYWORDS = ['okay', 'ok', 'okayy', 'alright', 'cool', 'got it', 'sure', 'fine', 'perfect', 'awesome', 'great'];
+const CONFIDENTIAL_KEYWORDS = ['secret', 'api_key', 'apikey', 'jwt_secret', 'mongo_uri', 'database_uri', 'connection string', 'private key', 'env file', 'server password', 'vulnerability', 'exploit', 'token secret', 'smtp_pass', 'credentials password'];
 
-const THANKS_KEYWORDS = [
-  'thank you',
-  'thanks',
-  'thankyou',
-  'thx',
-  'tysm',
-  'thanks a lot',
-  'thank u',
-  'appreciate it',
-  'many thanks',
-];
-
-const ACK_KEYWORDS = [
-  'okay',
-  'ok',
-  'okayy',
-  'alright',
-  'cool',
-  'got it',
-  'sure',
-  'fine',
-  'perfect',
-  'awesome',
-  'great',
-];
-
-const CONFIDENTIAL_KEYWORDS = [
-  'secret',
-  'api_key',
-  'apikey',
-  'jwt_secret',
-  'mongo_uri',
-  'database_uri',
-  'connection string',
-  'private key',
-  'env file',
-  'server password',
-  'vulnerability',
-  'exploit',
-  'token secret',
-  'smtp_pass',
-  'credentials password',
-];
-
-const findAnswer = (userText) => {
+const findAnswerFallback = (userText) => {
   const query = userText.toLowerCase().trim();
 
-  // 1. Greeting Handler
   if (GREETING_KEYWORDS.some((kw) => query === kw || query.startsWith(kw + ' '))) {
     return {
       response: `Hello! Welcome to DevFlow. How can I help you explore our enterprise multi-tenant developer workspace today?
@@ -183,35 +130,30 @@ You can ask me about:
     };
   }
 
-  // 2. Thanks / Gratitude Handler
   if (THANKS_KEYWORDS.some((kw) => query === kw || query.includes(kw))) {
     return {
       response: `You are welcome! Feel free to ask if you have any other questions about DevFlow.`,
     };
   }
 
-  // 3. Okay / Acknowledgment Handler
   if (ACK_KEYWORDS.some((kw) => query === kw || query === kw + '!' || query.startsWith(kw + ' '))) {
     return {
       response: `Glad to help! Let me know if you need anything else.`,
     };
   }
 
-  // 4. Confidentiality Protection Guard
   if (CONFIDENTIAL_KEYWORDS.some((kw) => query.includes(kw))) {
     return {
       response: `Security Notice: Sorry, I cannot share any confidential information, database keys, environment secrets, or private system credentials.`,
     };
   }
 
-  // 3. Product Knowledge Lookup
   for (const item of KNOWLEDGE_BASE) {
     if (item.keywords.some((kw) => query.includes(kw))) {
       return item;
     }
   }
 
-  // 4. Fallback for Unknown / Out-of-Scope Questions
   return {
     response: `Sorry, I don't have this information.
 
@@ -243,7 +185,7 @@ How can I help you explore our enterprise multi-tenant developer workspace today
     }
   }, [messages, isOpen, isTyping]);
 
-  const handleSend = (textToSend) => {
+  const handleSend = async (textToSend) => {
     const query = (textToSend || inputValue).trim();
     if (!query) return;
 
@@ -258,8 +200,37 @@ How can I help you explore our enterprise multi-tenant developer workspace today
     if (!textToSend) setInputValue('');
     setIsTyping(true);
 
+    try {
+      const res = await fetch('/api/v1/chatbot/query', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ query }),
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        if (data.success && data.data) {
+          const botMsg = {
+            id: Date.now() + 1,
+            sender: 'bot',
+            text: data.data.response,
+            action: data.data.actionText ? { text: data.data.actionText, href: data.data.actionHref } : null,
+            logId: data.data.logId,
+            feedback: null,
+            timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+          };
+          setMessages((prev) => [...prev, botMsg]);
+          setIsTyping(false);
+          return;
+        }
+      }
+    } catch (err) {
+      // Ignore network error and use fallback
+    }
+
+    // Local Fallback if server API is unavailable
     setTimeout(() => {
-      const match = findAnswer(query);
+      const match = findAnswerFallback(query);
       const botMsg = {
         id: Date.now() + 1,
         sender: 'bot',
@@ -269,7 +240,25 @@ How can I help you explore our enterprise multi-tenant developer workspace today
       };
       setMessages((prev) => [...prev, botMsg]);
       setIsTyping(false);
-    }, 600);
+    }, 400);
+  };
+
+  const handleFeedback = async (msgId, logId, type) => {
+    setMessages((prev) =>
+      prev.map((msg) => (msg.id === msgId ? { ...msg, feedback: type } : msg))
+    );
+
+    if (!logId) return;
+
+    try {
+      await fetch('/api/v1/chatbot/feedback', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ logId, feedback: type }),
+      });
+    } catch (err) {
+      // Ignore feedback error
+    }
   };
 
   return (
@@ -332,11 +321,12 @@ How can I help you explore our enterprise multi-tenant developer workspace today
                 )}
                 <div
                   className={`max-w-[82%] p-3.5 rounded-2xl leading-relaxed space-y-2 ${msg.sender === 'user'
-                    ? 'bg-accent text-white font-medium rounded-tr-none'
-                    : 'bg-cardBg border border-borderColor text-textPrimary shadow-subtle rounded-tl-none'
+                      ? 'bg-accent text-white font-medium rounded-tr-none'
+                      : 'bg-cardBg border border-borderColor text-textPrimary shadow-subtle rounded-tl-none'
                     }`}
                 >
                   <div className="whitespace-pre-line font-normal">{msg.text}</div>
+
                   {msg.action && (
                     <div className="pt-2 border-t border-borderColor/50">
                       <a
@@ -349,6 +339,32 @@ How can I help you explore our enterprise multi-tenant developer workspace today
                       </a>
                     </div>
                   )}
+
+                  {/* Feedback Buttons for Bot Messages */}
+                  {msg.sender === 'bot' && msg.id !== 1 && (
+                    <div className="pt-2 border-t border-borderColor/40 flex items-center justify-between text-[10px] text-textSecondary">
+                      <span>Was this helpful?</span>
+                      <div className="flex items-center gap-1.5">
+                        <button
+                          onClick={() => handleFeedback(msg.id, msg.logId, 'up')}
+                          className={`p-1 rounded hover:bg-bgSecondary transition-colors ${msg.feedback === 'up' ? 'text-emerald-500 font-bold' : 'text-textSecondary'
+                            }`}
+                          title="Helpful"
+                        >
+                          <ThumbsUp size={12} />
+                        </button>
+                        <button
+                          onClick={() => handleFeedback(msg.id, msg.logId, 'down')}
+                          className={`p-1 rounded hover:bg-bgSecondary transition-colors ${msg.feedback === 'down' ? 'text-rose-500 font-bold' : 'text-textSecondary'
+                            }`}
+                          title="Not helpful"
+                        >
+                          <ThumbsDown size={12} />
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
                   <span
                     className={`block text-[10px] text-right mt-1 opacity-70 ${msg.sender === 'user' ? 'text-white' : 'text-textSecondary'
                       }`}
