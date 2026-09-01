@@ -16,8 +16,16 @@ export const ForgotPassword = () => {
     setErrorMsg('');
     setSuccessData(null);
 
+    const trimmedEmail = email.trim();
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!emailRegex.test(trimmedEmail)) {
+      setErrorMsg('Please enter a valid email address.');
+      return;
+    }
+
     try {
-      const res = await forgotPassword({ email }).unwrap();
+      const res = await forgotPassword({ email: trimmedEmail }).unwrap();
       if (res.success) {
         setSuccessData(res.data);
       }

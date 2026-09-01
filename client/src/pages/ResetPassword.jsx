@@ -22,6 +22,12 @@ export const ResetPassword = () => {
     e.preventDefault();
     setErrorMsg('');
 
+    const trimmedToken = token.trim();
+    if (!trimmedToken) {
+      setErrorMsg('Security reset token is required.');
+      return;
+    }
+
     if (password !== confirmPassword) {
       setErrorMsg('Passwords do not match.');
       return;
@@ -33,7 +39,7 @@ export const ResetPassword = () => {
     }
 
     try {
-      const res = await resetPassword({ token, password }).unwrap();
+      const res = await resetPassword({ token: trimmedToken, password }).unwrap();
       if (res.success) {
         addToast({
           title: 'Password Reset Successful',

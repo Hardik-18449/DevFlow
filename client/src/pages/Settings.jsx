@@ -23,15 +23,21 @@ export const Settings = () => {
 
   const handleInvite = async (e) => {
     e.preventDefault();
-    if (!inviteEmail.trim()) return;
-
     setErrorMsg('');
     setCreatedInviteUrl('');
+
+    const trimmedEmail = inviteEmail.trim();
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!emailRegex.test(trimmedEmail)) {
+      setErrorMsg('Please enter a valid email address.');
+      return;
+    }
 
     try {
       const res = await inviteOrgMember({
         orgId: currentOrganization._id,
-        email: inviteEmail.trim(),
+        email: trimmedEmail,
         role: inviteRole,
       }).unwrap();
 
@@ -39,7 +45,7 @@ export const Settings = () => {
       const inviteToken = res.data?.inviteToken;
       const inviteUrl = (!emailSent && inviteToken) ? `${window.location.origin}/accept-invite?token=${inviteToken}` : '';
 
-      setSuccessMsg(res.data?.message || `Invitation email successfully sent to ${inviteEmail}`);
+      setSuccessMsg(res.data?.message || `Invitation email successfully sent to ${trimmedEmail}`);
       if (inviteUrl) {
         setCreatedInviteUrl(inviteUrl);
       }

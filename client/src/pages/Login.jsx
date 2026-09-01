@@ -19,7 +19,21 @@ export const Login = () => {
     if (e) e.preventDefault();
     setErrorMsg('');
 
-    const payload = customCredentials || { email, password };
+    const targetEmail = (customCredentials?.email || email).trim();
+    const targetPassword = customCredentials?.password || password;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!emailRegex.test(targetEmail)) {
+      setErrorMsg('Please enter a valid email address.');
+      return;
+    }
+
+    if (!targetPassword) {
+      setErrorMsg('Password is required.');
+      return;
+    }
+
+    const payload = { email: targetEmail, password: targetPassword };
     try {
       const res = await login(payload).unwrap();
       if (res.success) {

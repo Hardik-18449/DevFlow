@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { AlertCircle } from 'lucide-react';
 import { Modal } from '../ui/Modal';
 import { useCreateTaskMutation, useGetProjectMembersQuery } from '../../services/api';
 import { useToast } from '../ui/ToastContainer';
@@ -11,6 +12,7 @@ export const TaskFormModal = ({ isOpen, onClose, projectId, defaultStatus = 'TOD
   const [assignee, setAssignee] = useState('');
   const [dueDate, setDueDate] = useState('');
   const [labels, setLabels] = useState('');
+  const [errorMsg, setErrorMsg] = useState('');
 
   const { data: membersData } = useGetProjectMembersQuery(projectId, { skip: !projectId });
   const members = membersData?.data || [];
@@ -20,24 +22,31 @@ export const TaskFormModal = ({ isOpen, onClose, projectId, defaultStatus = 'TOD
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!title.trim()) return;
+    setErrorMsg('');
+
+    const trimmedTitle = title.trim();
+    if (!trimmedTitle || trimmedTitle.length < 2) {
+      setErrorMsg('Task title must be at least 2 characters long.');
+      return;
+    }
 
     try {
       await createTask({
         projectId,
         data: {
-          title,
-          description,
+          title: trimmedTitle,
+          description: description.trim(),
           status,
           priority,
           assignee: assignee || null,
           dueDate: dueDate || null,
-          labels: labels ? labels.split(',').map((l) => l.trim()) : [],
+          labels: labels ? labels.split(',').map((l) => l.trim()).filter(Boolean) : [],
         },
       }).unwrap();
 
       setTitle('');
       setDescription('');
+      setErrorMsg('');
       onClose();
       addToast({
         title: 'Task Created',
@@ -45,17 +54,19 @@ export const TaskFormModal = ({ isOpen, onClose, projectId, defaultStatus = 'TOD
         type: 'success',
       });
     } catch (err) {
-      addToast({
-        title: 'Action Restricted',
-        message: err.data?.message || 'You do not have permission to create tasks in this project.',
-        type: 'warning',
-      });
+      setErrorMsg(err.data?.message || 'Failed to create task. Please check task details.');
     }
   };
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Create New Task">
       <form onSubmit={handleSubmit} className="space-y-4">
+        {errorMsg && (
+          <div className="p-3 rounded-xl bg-danger/10 border border-danger/30 text-xs text-danger flex items-center gap-2 font-medium">
+            <AlertCircle size={16} className="shrink-0" />
+            <span>{errorMsg}</span>
+          </div>
+        )}
         <div>
           <label className="text-xs font-semibold text-textSecondary uppercase tracking-wider block mb-1">
             Task Title *

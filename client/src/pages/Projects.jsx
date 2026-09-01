@@ -40,19 +40,32 @@ export const Projects = () => {
 
   const handleCreate = async (e) => {
     e.preventDefault();
-    const targetOrgId = activeOrg?._id;
+    setCreateError('');
 
-    if (!name.trim()) return;
+    const targetOrgId = activeOrg?._id;
+    const trimmedName = name.trim();
+    const trimmedKey = key.trim().toUpperCase();
+    const trimmedDesc = description.trim();
+
     if (!targetOrgId) {
       setCreateError('No organization selected. Please create or join an organization first.');
       return;
     }
-    setCreateError('');
+
+    if (!trimmedName || trimmedName.length < 2) {
+      setCreateError('Project name must be at least 2 characters long.');
+      return;
+    }
+
+    if (!trimmedKey || !/^[A-Z0-9]{2,10}$/.test(trimmedKey)) {
+      setCreateError('Project key must be 2-10 uppercase letters or numbers (e.g. CORE).');
+      return;
+    }
 
     try {
       const res = await createProject({
         orgId: targetOrgId,
-        data: { name, key, description, priority },
+        data: { name: trimmedName, key: trimmedKey, description: trimmedDesc, priority },
       }).unwrap();
 
       setName('');

@@ -20,8 +20,27 @@ export const Register = () => {
     e.preventDefault();
     setErrorMsg('');
 
+    const trimmedName = name.trim();
+    const trimmedEmail = email.trim();
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!trimmedName || trimmedName.length < 2) {
+      setErrorMsg('Please enter a valid full name (at least 2 characters).');
+      return;
+    }
+
+    if (!emailRegex.test(trimmedEmail)) {
+      setErrorMsg('Please enter a valid email address.');
+      return;
+    }
+
+    if (!password || password.length < 6) {
+      setErrorMsg('Password must be at least 6 characters long.');
+      return;
+    }
+
     try {
-      const res = await registerUser({ name, email, password }).unwrap();
+      const res = await registerUser({ name: trimmedName, email: trimmedEmail, password }).unwrap();
       if (res.success) {
         dispatch(
           setCredentials({
